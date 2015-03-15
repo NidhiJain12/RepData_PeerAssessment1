@@ -1,16 +1,12 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
 Here, we will first unzip the files and load the contents of the file using "read.csv".
 
-```{r}
+
+```r
 unzip("activity.zip", overwrite=TRUE)
 activity <- read.csv("activity.csv")
 ```
@@ -26,8 +22,25 @@ We will ignore the missing values in the dataset.
 1. **Calculate the total number of steps taken per day:**   
 We will first group the dataset by date and then summarize it to calculate total number of steps per day.
 
-```{r TotalStepsPerDay, results='hide'}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 dateGroup <- group_by(activity, date)
 stepsTotalPerDay <- summarize(dateGroup, totSteps = sum(steps, na.rm=TRUE))
 ```
@@ -35,20 +48,24 @@ stepsTotalPerDay <- summarize(dateGroup, totSteps = sum(steps, na.rm=TRUE))
 2. **Make a histogram of the total number of steps taken each day:**  
 We will use the "hist" function from basic plotting system
 
-```{r HistPlot}
+
+```r
 hist(stepsTotalPerDay$totSteps, col="steelblue", main = "Total Number of Steps taken Per Day", xlab = "Total Steps Per Day")
 ```
+
+![](PA1_template_files/figure-html/HistPlot-1.png) 
  
 3. **Calculate and report the mean and median of the total number of steps taken per day:**
 
-```{r meanMediunStepsPerDay}
+
+```r
 meanSteps <- round(mean(stepsTotalPerDay$totSteps, na.rm=TRUE), digits=2)
 medianSteps <- median(stepsTotalPerDay$totSteps, na.rm=TRUE)
 ```
 
-The mean of the total steps taken per day is **`r meanSteps`**.  
+The mean of the total steps taken per day is **9354.23**.  
 
-The median of the total steps taken per day is **`r medianSteps`**. 
+The median of the total steps taken per day is **10395**. 
 
 ## What is the average daily activity pattern?
 
@@ -59,7 +76,8 @@ Here are the steps we take to answer the question
 1. **Calculate the average number of steps taken, averaged across all days for each 5-minute interval.**
 We will group the data by the 5-minute interval and then summarize it to calculate average number of steps across all days per 5-minute interval.
 
-```{r AvgStepsPerInterval}
+
+```r
 intervalGroup <- group_by(activity, interval)
 stepsAvgPerInterval <- summarize(intervalGroup, avgSteps = mean(steps,na.rm=TRUE))
 ```
@@ -67,20 +85,24 @@ stepsAvgPerInterval <- summarize(intervalGroup, avgSteps = mean(steps,na.rm=TRUE
 
 2. **Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)**
 
-```{r plotAvgSteps}
+
+```r
 with(data=stepsAvgPerInterval, plot(interval, avgSteps, type="l", main="Average Steps across all days for each interval", xlab="Interval", ylab="Average Steps", col="Blue"))
 ```
+
+![](PA1_template_files/figure-html/plotAvgSteps-1.png) 
 
 3. **Calculate the 5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps**
 
 We will calulate the maximum value of "avg steps" in the grouped data and then find the interval corresponding to that value.
 
-```{r maxAvgSteps}
+
+```r
 maxValue <- max(stepsAvgPerInterval$avgSteps)
 maxInterval <- stepsAvgPerInterval$interval[which(stepsAvgPerInterval$avgSteps==maxValue)]
 ```
 
-The 5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps is **`r maxInterval`**.
+The 5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps is **835**.
 
 ## Imputing missing values
 
@@ -88,11 +110,12 @@ The 5-minute interval, on average across all the days in the dataset, that conta
 
 1. **Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)**
 
-```{r numMissingValues}
+
+```r
 totNAValues <- sum(is.na(activity$steps))
 ```
 
-The total number of missing values in activity dataset is: **`r totNAValues`**.
+The total number of missing values in activity dataset is: **2304**.
 
 
 2. **Fill in all of the missing values in the dataset**  
@@ -111,7 +134,8 @@ Steps followed are:
 
 - Remove unnecessary columns introduced as a result of above steps.
 
-```{r fillMissingValues}
+
+```r
 activity_new <- merge(activity, stepsAvgPerInterval, by.x="interval",by.y="interval", all=TRUE)
 
 activity_new <- mutate(activity_new, new_steps = ifelse(is.na(steps), avgSteps, steps))
@@ -124,7 +148,8 @@ activity_new <- select(activity_new, steps = new_steps, date, interval)
 
 Calculate total number of steps each day for the new dataset "activity_new"
 
-```{r TotalStepsPerDayFixMissingVals, results='hide'}
+
+```r
 dateGroup_new <- group_by(activity_new, date)
 stepsTotalPerDay_new <- summarize(dateGroup_new, totSteps = sum(steps, na.rm=TRUE))
 ```
@@ -132,20 +157,24 @@ stepsTotalPerDay_new <- summarize(dateGroup_new, totSteps = sum(steps, na.rm=TRU
 
 Plot the histogram for total steps taken per day after fixing the missing values for steps.
 
-```{r HistPlotFixMissingVal}
+
+```r
 hist(stepsTotalPerDay_new$totSteps, col="seagreen", main = "Total Number of Steps taken Per Day (After Fixing Missing Values)", xlab = "Total Steps Per Day")
 ```
 
+![](PA1_template_files/figure-html/HistPlotFixMissingVal-1.png) 
+
 4. **Calculate and report the mean and median total number of steps taken per day for the new dataset**
 
-```{r meanMedianStepsFixMissingVals}
+
+```r
 meanSteps_new <- mean(stepsTotalPerDay_new$totSteps)
 medianSteps_new <- median(stepsTotalPerDay_new$totSteps)
 ```
 
-The mean of the total steps taken per day (after fixing missing values) is **`r meanSteps_new `**.  
+The mean of the total steps taken per day (after fixing missing values) is **1.0766189\times 10^{4}**.  
 
-The median of the total steps taken per day (after fixing missing values) is **`r medianSteps_new `**. 
+The median of the total steps taken per day (after fixing missing values) is **1.0766189\times 10^{4}**. 
 
 **YES**, these values differ from the estimates from the first part of the assignment.
 
@@ -162,7 +191,8 @@ We will use mutate function, steps followed are:
 - Convert "date" column to date type and compute the day of the week using "weekdays()" function
 - Convert it to a factor variable and assign level "weekend" if the value is either "Saturday" or "Sunday" or Otherwise assign level "weekday".
 
-```{r calcWeekDays}
+
+```r
 activity_new <- mutate(activity_new, weekVal = weekdays(as.Date(date)) ,weekVal = factor(ifelse(weekVal=="Saturday" | weekVal == "Sunday", 0, 1), labels=c("weekend", "weekday"))) 
 ```
 
@@ -174,7 +204,8 @@ This is achieved by first grouping the data by "interval" and "weekVal" (weekday
 
 Here is teh R code:
 
-```{r avgStepsIntWeek}
+
+```r
 groupIntWeek <- group_by(activity_new, interval, weekVal)
 avgStepsPerIntervalWeek <- summarize(groupIntWeek, avgSteps = mean(steps))
 ```
@@ -185,8 +216,11 @@ The xyplot() function from lattice plotting system is used.
 
 Here is the R code:
 
-```{r plotAvgStepsWeek}
+
+```r
 library(lattice)
 xyplot(avgSteps~interval | weekVal, data=avgStepsPerIntervalWeek, type="l", col="blue", layout = c(1,2), main="Average Number of Steps across weekdays or weekends per Interval", xlab="Interval", ylab="Average number of steps")
 ```
+
+![](PA1_template_files/figure-html/plotAvgStepsWeek-1.png) 
 
