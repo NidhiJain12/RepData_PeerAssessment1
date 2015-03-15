@@ -36,7 +36,7 @@ stepsTotalPerDay <- summarize(dateGroup, totSteps = sum(steps, na.rm=TRUE))
 We will use the "hist" function from basic plotting system
 
 ```{r HistPlot}
-hist(stepsTotalPerDay$totSteps, col="steelblue", main = "Total Number of Steps taken Per Day", xlab = "Total Steps Per Day")
+hist(stepsTotalPerDay$totSteps, col="steelblue", main = "Total Number of Steps taken Per Day", xlab = "Total Steps Per Day", breaks=16)
 ```
  
 3. **Calculate and report the mean and median of the total number of steps taken per day:**
@@ -133,7 +133,7 @@ stepsTotalPerDay_new <- summarize(dateGroup_new, totSteps = sum(steps, na.rm=TRU
 Plot the histogram for total steps taken per day after fixing the missing values for steps.
 
 ```{r HistPlotFixMissingVal}
-hist(stepsTotalPerDay_new$totSteps, col="seagreen", main = "Total Number of Steps taken Per Day (After Fixing Missing Values)", xlab = "Total Steps Per Day")
+hist(stepsTotalPerDay_new$totSteps, col="seagreen", main = "Total Number of Steps taken Per Day (After Fixing Missing Values)", xlab = "Total Steps Per Day", breaks=16)
 ```
 
 4. **Calculate and report the mean and median total number of steps taken per day for the new dataset**
