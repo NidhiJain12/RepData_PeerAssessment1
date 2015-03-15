@@ -165,7 +165,6 @@ We will use mutate function, steps followed are:
 ```{r calcWeekDays}
 activity_new <- mutate(activity_new, weekVal = weekdays(as.Date(date)) ,weekVal = factor(ifelse(weekVal=="Saturday" | weekVal == "Sunday", 0, 1), labels=c("weekend", "weekday"))) 
 ```
-
 2. **Make a panel plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).**
 
 Before plotting the date, we will calculate the avergae number of steps taken, averaged across all weekday days or weekend days for every interval.

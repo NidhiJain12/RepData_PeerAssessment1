@@ -1,4 +1,9 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
 
 
 ## Loading and preprocessing the data
@@ -25,22 +30,6 @@ We will first group the dataset by date and then summarize it to calculate total
 
 ```r
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 dateGroup <- group_by(activity, date)
 stepsTotalPerDay <- summarize(dateGroup, totSteps = sum(steps, na.rm=TRUE))
 ```
@@ -53,7 +42,7 @@ We will use the "hist" function from basic plotting system
 hist(stepsTotalPerDay$totSteps, col="steelblue", main = "Total Number of Steps taken Per Day", xlab = "Total Steps Per Day")
 ```
 
-![](PA1_template_files/figure-html/HistPlot-1.png) 
+![plot of chunk HistPlot](figure/HistPlot-1.png) 
  
 3. **Calculate and report the mean and median of the total number of steps taken per day:**
 
@@ -90,7 +79,7 @@ stepsAvgPerInterval <- summarize(intervalGroup, avgSteps = mean(steps,na.rm=TRUE
 with(data=stepsAvgPerInterval, plot(interval, avgSteps, type="l", main="Average Steps across all days for each interval", xlab="Interval", ylab="Average Steps", col="Blue"))
 ```
 
-![](PA1_template_files/figure-html/plotAvgSteps-1.png) 
+![plot of chunk plotAvgSteps](figure/plotAvgSteps-1.png) 
 
 3. **Calculate the 5-minute interval, on average across all the days in the dataset, that contains the maximum number of steps**
 
@@ -162,7 +151,7 @@ Plot the histogram for total steps taken per day after fixing the missing values
 hist(stepsTotalPerDay_new$totSteps, col="seagreen", main = "Total Number of Steps taken Per Day (After Fixing Missing Values)", xlab = "Total Steps Per Day")
 ```
 
-![](PA1_template_files/figure-html/HistPlotFixMissingVal-1.png) 
+![plot of chunk HistPlotFixMissingVal](figure/HistPlotFixMissingVal-1.png) 
 
 4. **Calculate and report the mean and median total number of steps taken per day for the new dataset**
 
@@ -172,9 +161,9 @@ meanSteps_new <- mean(stepsTotalPerDay_new$totSteps)
 medianSteps_new <- median(stepsTotalPerDay_new$totSteps)
 ```
 
-The mean of the total steps taken per day (after fixing missing values) is **1.0766189\times 10^{4}**.  
+The mean of the total steps taken per day (after fixing missing values) is **1.0766189 &times; 10<sup>4</sup>**.  
 
-The median of the total steps taken per day (after fixing missing values) is **1.0766189\times 10^{4}**. 
+The median of the total steps taken per day (after fixing missing values) is **1.0766189 &times; 10<sup>4</sup>**. 
 
 **YES**, these values differ from the estimates from the first part of the assignment.
 
@@ -195,7 +184,6 @@ We will use mutate function, steps followed are:
 ```r
 activity_new <- mutate(activity_new, weekVal = weekdays(as.Date(date)) ,weekVal = factor(ifelse(weekVal=="Saturday" | weekVal == "Sunday", 0, 1), labels=c("weekend", "weekday"))) 
 ```
-
 2. **Make a panel plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).**
 
 Before plotting the date, we will calculate the avergae number of steps taken, averaged across all weekday days or weekend days for every interval.
@@ -222,5 +210,5 @@ library(lattice)
 xyplot(avgSteps~interval | weekVal, data=avgStepsPerIntervalWeek, type="l", col="blue", layout = c(1,2), main="Average Number of Steps across weekdays or weekends per Interval", xlab="Interval", ylab="Average number of steps")
 ```
 
-![](PA1_template_files/figure-html/plotAvgStepsWeek-1.png) 
+![plot of chunk plotAvgStepsWeek](figure/plotAvgStepsWeek-1.png) 
 
